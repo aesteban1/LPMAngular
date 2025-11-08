@@ -67,9 +67,11 @@ li{
 .dropdown-menu{
   position: absolute;
   top: 105%;
+  right: -20%;
   background-color: #9a9a9a;
   border-radius: 0.2rem;
   z-index: 70;
+  outline: 1px solid rgba(255, 255, 255, 0.8)
 }
 
 .dropdown-item{

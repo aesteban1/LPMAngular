@@ -1,6 +1,7 @@
-import { Component, EventEmitter, inject, Input, Output, signal} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, HostListener, ElementRef, Host, effect} from '@angular/core';
 import { LoanObject } from '../types/loan-entry';
 import { LoanUiService } from '../services/loan-ui-service';
+import { Dropdownservice } from '../services/dropdownservice';
 
 @Component({
   selector: 'app-gridcard',
@@ -60,31 +61,67 @@ export class Gridcard {
   @Input() selected = false;
   @Output() toggleSelection = new EventEmitter<number>();
   @Output() deleteLoanItem = new EventEmitter<number>();
-  showDropdown = signal(false);
 
+  private el = inject(ElementRef);
   modalUI: LoanUiService = inject(LoanUiService);
-  openModal = this.modalUI.modalOpen
-  modalMode = this.modalUI.modalMode
-  modalData = this.modalUI.editingLoan
+  dropdowns = inject(Dropdownservice);
 
-  onClick() {
-    if(this.selectMode) this.toggleSelection.emit(this.loanObject.id)
+  showDropdown = signal(false);
+  dropdownId = `dropdown-${crypto.randomUUID()}`;
+
+  constructor() {
+    effect(() => {
+      const activeId = this.dropdowns.activeDropdownId();
+      if (activeId !== this.dropdownId) {
+        this.showDropdown.set(false);
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedInside = this.el.nativeElement.contains(event.target);
+    if(!clickedInside) {
+      this.closeDropdown();
+    }
+  }
+
+  toggleDropdown(event: MouseEvent) {
+    event?.stopPropagation()
+    const isOpen = this.dropdowns.isOpen(this.dropdownId);
+
+    this.dropdowns.close();
+
+    if (!isOpen) {
+      this.dropdowns.open(this.dropdownId);
+      this.showDropdown.set(true);
+    } else {
+      this.showDropdown.set(false);
+    }
+  }
+
+  closeDropdown() {
+    this.showDropdown.set(false);
+    if(this.dropdowns.isOpen(this.dropdownId)) {
+      this.dropdowns.close();
+    }
   }
 
   onDelete(event: MouseEvent) {
     event.stopPropagation();
     this.deleteLoanItem.emit(this.loanObject.id);
+    this.closeDropdown();
   }
 
   onEdit(loanObject: LoanObject) {
-    this.modalData.set(loanObject);
-    this.modalMode.set('edit');
-    this.openModal.set(true);
+    this.modalUI.editingLoan.set(loanObject);
+    this.modalUI.modalMode.set('edit');
+    this.modalUI.modalOpen.set(true);
+    this.closeDropdown();
   }
 
-  toggleDropdown(event: MouseEvent) {
-    event?.stopPropagation()
-    this.showDropdown.update(u => !u);
+  onClick() {
+    if(this.selectMode) this.toggleSelection.emit(this.loanObject.id)
   }
 
   formatDate(d: string) {

@@ -28,7 +28,7 @@ export class App {
     this.modalOpen.set(true);
   }
 
-  closeAddModal() {
+  closeModal() {
     this.modalOpen.set(false);
     this.modalData.set(null);
     this.modalMode.set('add');
@@ -37,7 +37,17 @@ export class App {
   async addLoanToList(data: Omit<LoanObject, 'id'>){
     const created = await this.loanService.postLoan(data);
     this.loanService.addLoan(created);
-    this.closeAddModal();
+    this.closeModal();
   }
 
+  async updateLoanItem(data: LoanObject) {
+    const updated = await this.loanService.updateLoan(data);
+    this.loanService.updateItem(updated);
+    this.closeModal();
+  }
+
+  async deleteLoanItem(id: number) {
+    const deleted = await this.loanService.deleteLoan(id);
+    this.closeModal();
+  }
 }

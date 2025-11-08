@@ -1,4 +1,4 @@
-import { Component, computed, effect, EventEmitter, inject, Output,Input, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Output,Input, signal, OnInit } from '@angular/core';
 import { GridItem } from '../grid-view/grid-view';
 import { type LoanObject } from '../types/loan-entry';
 import { LoanService } from '../services/loanService';
@@ -6,12 +6,13 @@ import { ListItem } from '../list-view/list-view';
 import { EmptyDisplay } from '../empty-display/empty-display';
 import { Loadingcontent } from "../loadingcontent/loadingcontent";
 import { LoanUiService } from '../services/loan-ui-service';
-
+import { TableModel } from '../table-model';
+import { Columnmenu } from '../columnmenu/columnmenu';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [GridItem, ListItem, EmptyDisplay, Loadingcontent],
+  imports: [GridItem, ListItem, EmptyDisplay, Loadingcontent, Columnmenu],
   template: `
     <section class="dashboard">
       <menu role="toolbar" class="toolbar" aria-label="toolbar">
@@ -26,7 +27,9 @@ import { LoanUiService } from '../services/loan-ui-service';
           <li class="tool-icon"><strong>{{this.selectedIds().size}} entires selected</strong></li>
         }@else {
           <li class="tool-icon"><button class="primary" (click)="onAddEntryClick()">New Entry</button></li>
+          <li><app-columnmenu [table]="table"></app-columnmenu></li>
         }
+
       </menu>
 
       @if(loading()){
@@ -46,16 +49,19 @@ import { LoanUiService } from '../services/loan-ui-service';
         [selectMode]="selectMode()"
         [selectedIds]="selectedIds()"
         (toggleSelection)="toggleSelection($event)"
-        (deleteLoanItem)="deleteLoanItem($event)"></app-list-item>
+        (deleteLoanItem)="deleteLoanItem($event)"
+        [table]="table"></app-list-item>
       }
     </section>
   `,
   styleUrl: './dashboard.scss'
 })
-export class Dashboard {
+export class Dashboard implements OnInit{
   @Output() addNewEntry = new EventEmitter<void>();
 
-  loanService: LoanService = inject(LoanService);
+  table = new TableModel<LoanObject>();
+
+  private loanService: LoanService = inject(LoanService);
   loanObjectList = this.loanService.loanObjectList;
   loading = this.loanService.isLoading;
 
@@ -71,9 +77,26 @@ export class Dashboard {
   selectMode = signal(false);
   selectedIds = signal<Set<number>>(new Set());
 
+  ngOnInit(){
+    this.table.setColumns([
+      {key:'name', label:'Name',visible:true, sortable:true, direction:null},
+      {key:'balance', label:'Balance',visible:true, sortable:true, direction:null},
+      {key:'rate', label:'Rate',visible:true, sortable:true, direction:null},
+      {key:'minimum', label:'Minimum',visible:true, sortable:true, direction:null},
+      {key:'order', label:'Pay Order',visible:true, sortable:true, direction:null},
+      {key:'date', label:'Last Payment',visible:true, sortable:true, direction:null}
+    ]);
+
+    this.table.setData(this.loanService.loanObjectList());
+  }
+
   constructor() {
     effect(()=>{
-      localStorage.setItem('viewMode', this.display())
+      localStorage.setItem('viewMode', this.display());
+    })
+
+    effect(() => {
+      this.table.setData(this.loanService.loanObjectList());
     })
   }
 
@@ -117,9 +140,4 @@ export class Dashboard {
   onAddEntryClick() {
     this.openModal.set(true);
   }
-
-  onEditEntry(id: number) {
-
-  }
-
 }

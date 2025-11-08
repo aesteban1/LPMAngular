@@ -18,6 +18,12 @@ export class LoanService {
     this.loanObjectList.update(list => list.filter(loan => loan.id !== id))
   }
 
+  updateItem(updated: LoanObject){
+    this.loanObjectList.update(list => 
+      list.map(item => item.id === updated.id ? updated : item)
+    );
+  }
+
   async getAllLoans():Promise<LoanObject[]> {
     this.isLoading.set(true);
     try {
@@ -92,5 +98,30 @@ export class LoanService {
     if(failed.length) {
       console.warn(`${failed.length} deletions failed.`);
     }
+  }
+
+  async updateLoan(data: LoanObject): Promise<LoanObject> {
+    // this.isLoading.set(true);
+    try {
+      const msg = await fetch(`${this.url}/${data.id}`, {
+        method: "PUT",
+        headers:{
+          'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      })
+      
+      if(!msg.ok){throw new Error(`HTTP error! status: ${msg.status}`)}
+
+      const updated = await msg.json();
+
+      this.updateItem(updated);
+      return updated;
+    } catch (error) {
+      console.error(`Error updating loan`, error);
+      throw error;
+    }
+    // finally {
+    //   this.isLoading.set(false);
+    // }
   }
 }

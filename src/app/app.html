@@ -2,8 +2,10 @@
   <header>Loan Optimizer</header>
   @if (modalOpen()) {
     <app-modal 
-    (close)="closeAddModal()" 
-    (save)="addLoanToList($event)" 
+    (close)="closeModal()" 
+    (save)="addLoanToList($event)"
+    (delete)="deleteLoanItem($event)"
+    (update)="updateLoanItem($event)"
     [modalMode]="modalMode()" 
     [modalData]="this.modalData()"></app-modal>
   }

@@ -45,7 +45,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
         <button class="primary" type="button" (click)="closeModal()">Cancel</button>
         <button class="primary" type="submit">Save</button>
         @if(modalMode === 'edit'){
-          <button class="primary" type="button">Delete</button>
+          <button class="primary" type="button" (click)="onDelete($event)">Delete</button>
         }
       </div>
     </form>
@@ -58,7 +58,9 @@ export class Modal implements OnChanges{
   @Input() modalMode: 'add' | 'edit' = 'add';
   @Input() modalData: LoanObject | null = null
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>()
+  @Output() save = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<number>();
+  @Output() update = new EventEmitter<any>()
 
   form = new FormGroup({
     name: new FormControl('', {nonNullable: true}),
@@ -91,10 +93,20 @@ export class Modal implements OnChanges{
 
   onSubmit(event: Event) {
     event.preventDefault();
-    if(this.form.valid) {
-      this.save.emit(this.form.value);//Submitting edit entries creates new entries, FIX IT!!
+    if(this.form.invalid) return;
+
+    const data = this.form.value as Omit<LoanObject, 'id'>
+
+    if(this.modalMode === "edit" && this.modalData){
+      this.update.emit({id: this.modalData.id, ...data})
+    }else{
+      this.save.emit(data);
     }
-    return;
+  }
+
+  onDelete(event: MouseEvent) {
+    event.stopPropagation();
+    this.delete.emit(this.modalData?.id);
   }
 
   closeModal() {
