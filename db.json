@@ -1,0 +1,67 @@
+{
+  "loans": [
+    {
+      "id": "1",
+      "name": "Car Loan",
+      "balance": 14500,
+      "rate": 4.2,
+      "minimum": 280,
+      "order": "interest",
+      "date": "2024-07-15"
+    },
+    {
+      "id": "3",
+      "name": "Student Loan B",
+      "balance": 18000,
+      "rate": 4.9,
+      "minimum": 200,
+      "date": "2024-09-01",
+      "order": "interest"
+    },
+    {
+      "id": "4",
+      "name": "Credit Card",
+      "balance": 7000,
+      "rate": 18.9,
+      "minimum": 150,
+      "order": "interest",
+      "date": "2024-07-05"
+    },
+    {
+      "id": "5",
+      "name": "Mortgage",
+      "balance": 210000,
+      "rate": 3.6,
+      "minimum": 1200,
+      "date": "2024-06-01",
+      "order": "principal"
+    },
+    {
+      "id": "6",
+      "name": "Personal Loan",
+      "balance": 10000,
+      "rate": 7.8,
+      "minimum": 185,
+      "order": "interest",
+      "date": "2024-10-01"
+    },
+    {
+      "id": "7",
+      "name": "Medical Debt",
+      "balance": 4200,
+      "rate": 2.5,
+      "minimum": 90,
+      "date": "2024-07-20",
+      "order": "principal"
+    },
+    {
+      "id": "8",
+      "name": "Buy Now Pay Later",
+      "balance": 1200,
+      "rate": 0,
+      "minimum": 100,
+      "date": "2024-08-15",
+      "order": "principal"
+    }
+  ]
+}
