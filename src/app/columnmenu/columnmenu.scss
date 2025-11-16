@@ -1,0 +1,11 @@
+.column-menu{
+  background-color: #3a3a3a;
+  outline: 1px solid rgba(160,160,160,0.5);
+  position: absolute;
+  width: 10rem;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: .4rem;
+}

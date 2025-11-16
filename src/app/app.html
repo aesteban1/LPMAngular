@@ -1,0 +1,17 @@
+<main class="main">
+  <header>Loan Optimizer</header>
+  @if (modalOpen()) {
+    <app-modal 
+    (close)="closeModal()" 
+    (save)="addLoanToList($event)"
+    (delete)="deleteLoanItem($event)"
+    (update)="updateLoanItem($event)"
+    [modalMode]="modalMode()" 
+    [modalData]="this.modalData()"></app-modal>
+  }
+  <div class="content">
+    <app-dashboard></app-dashboard>
+  </div>
+</main>
+
+<router-outlet />
