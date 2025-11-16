@@ -52,7 +52,16 @@ export class TableModel<T extends Record<string, any>> {
 
   //obtains data given a variable (row) and a type (T) to look for
   getCell(row: T, key: keyof T) {
+    if(key === 'balance' || key === 'minimum') {
+      return `$${row[key].toFixed(2)}`
+    }else if(key === 'rate'){
+      return `${row[key].toFixed(2)}%`
+    }
     return row[key];
+  }
+
+  formatCell(row: T, key: keyof T) {
+
   }
 
   //Toggles the visibility property for ColumnDef data types

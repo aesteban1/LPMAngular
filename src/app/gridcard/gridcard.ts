@@ -20,14 +20,19 @@ import { Dropdownservice } from '../services/dropdownservice';
               <ul class="dropdown-menu"
               [class.openDropdown]="showDropdown()"
               [class.closeDropdown]="!showDropdown()">
+                <li class="dropdown-item expand-btn">
+                  <button (click)="onExpand()">
+                    <img src="./assets/expand.svg" alt="expand">Expand
+                  </button>
+                </li>
                 <li class="dropdown-item edit-btn">
                   <button (click)="onEdit(loanObject)">
-                    <img src="assets/edit.svg" alt="pencil icon">Edit
+                    <img src="assets/edit.svg" alt="edit">Edit
                   </button>
                 </li>
                 <li class="dropdown-item delete-btn">
                   <button (click)="onDelete($event)">
-                    <img src="assets/trash.svg" alt="trashIcon">Delete
+                    <img src="assets/trash.svg" alt="delete">Delete
                   </button>
                 </li>
               </ul>
@@ -118,6 +123,10 @@ export class Gridcard {
     this.modalUI.modalMode.set('edit');
     this.modalUI.modalOpen.set(true);
     this.closeDropdown();
+  }
+
+  onExpand() {
+    console.log('expand clicked!');
   }
 
   onClick() {

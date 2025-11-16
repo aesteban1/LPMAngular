@@ -27,7 +27,14 @@ import { Columnmenu } from '../columnmenu/columnmenu';
           <li class="tool-icon"><strong>{{this.selectedIds().size}} entires selected</strong></li>
         }@else {
           <li class="tool-icon"><button class="primary" (click)="onAddEntryClick()">New Entry</button></li>
-          <li><app-columnmenu [table]="table"></app-columnmenu></li>
+          @if(display() === 'list'){
+            <li class="tool-icon">
+              <button class="primary" (click)="toggleConfig()">Column Configuartion</button>
+              @if(showColumnMenu()){
+                <app-columnmenu [table]="table"></app-columnmenu>
+              }
+              </li>
+          }
         }
 
       </menu>
@@ -50,7 +57,9 @@ import { Columnmenu } from '../columnmenu/columnmenu';
         [selectedIds]="selectedIds()"
         (toggleSelection)="toggleSelection($event)"
         (deleteLoanItem)="deleteLoanItem($event)"
-        [table]="table"></app-list-item>
+        [table]="table"
+        (toggleAll)="selectAll()"
+        [allSelected]="allSelected()"></app-list-item>
       }
     </section>
   `,
@@ -70,12 +79,14 @@ export class Dashboard implements OnInit{
   modalMode = this.modalUI.modalMode
   modalData = this.modalUI.editingLoan
 
-
   filteredObjectList: LoanObject[]=[]
   display = signal<'list'|'grid'>(localStorage.getItem('viewMode') as 'grid' | 'list' || 'list')
 
   selectMode = signal(false);
   selectedIds = signal<Set<number>>(new Set());
+  allSelected = signal(false);
+
+  showColumnMenu = signal(false);
 
   ngOnInit(){
     this.table.setColumns([
@@ -113,6 +124,10 @@ export class Dashboard implements OnInit{
     if(!this.selectMode()) this.selectedIds.set(new Set()); //selectMode is false, reset the selectedIds Set to empty
   }
 
+  toggleConfig() {
+    this.showColumnMenu.update(c => !c);
+  }
+
   toggleSelection(id: number) {
     this.selectedIds.update(oldSet => {
       const newSet = new Set(oldSet);//Create a new reference to the updated Set
@@ -123,6 +138,24 @@ export class Dashboard implements OnInit{
       }
       return newSet
     })
+
+    if(this.selectedIds().size < this.loanObjectList().length) {
+      this.allSelected.set(false);
+    }else{
+      this.allSelected.set(true);
+    }
+  }
+
+  selectAll() {
+    if(this.allSelected()){
+      this.selectedIds.set(new Set())
+      this.allSelected.set(false);
+    }else{
+      this.loanObjectList().map(l => {
+        this.selectedIds().add(l.id);
+      })
+      this.allSelected.set(true);
+    }
   }
 
   deleteSelected() {

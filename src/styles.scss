@@ -22,13 +22,13 @@ main{
   padding: 0.5rem  1rem;
   cursor: pointer;
   background-color: #2a2a2a;
-  outline: 1px solid rgba(160, 160, 160, 0.25);
-  color: white;
+  outline: 2px solid rgba(160, 160, 160, 0.5);
   border: none;
+  color: white;
   border-radius: .5rem;
   font-weight: bold;
   width: fit-content;
   &:hover{
-    outline: 1px solid rgba(130, 93, 255, 1);
+    outline: 2px solid #7052D4;
   }
 }
