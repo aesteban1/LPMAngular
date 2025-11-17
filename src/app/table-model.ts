@@ -60,10 +60,6 @@ export class TableModel<T extends Record<string, any>> {
     return row[key];
   }
 
-  formatCell(row: T, key: keyof T) {
-
-  }
-
   //Toggles the visibility property for ColumnDef data types
   toggleColumn(key: keyof T){
     this._columns.update(cols => {
