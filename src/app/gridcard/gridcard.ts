@@ -119,7 +119,7 @@ export class Gridcard {
   }
 
   onEdit(loanObject: LoanObject) {
-    this.modalUI.editingLoan.set(loanObject);
+    this.modalUI.targetLoan.set(loanObject);
     this.modalUI.modalMode.set('edit');
     this.modalUI.modalOpen.set(true);
     this.closeDropdown();
@@ -133,7 +133,8 @@ export class Gridcard {
     if(this.selectMode) this.toggleSelection.emit(this.loanObject.id)
   }
 
-  formatDate(d: string) {
+  formatDate(d?: string) {
+    if (!d) return '';
     const a = d.split('-');
     const year: number = Number(a[0]);
     const month: number = Number(a[1]);

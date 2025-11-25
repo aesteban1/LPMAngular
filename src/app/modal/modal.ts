@@ -13,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
       </h2>
       <button class="close primary" (click)="closeModal()">x</button>
     </header>
+    
     <form id="form" [formGroup]="form" (submit)="onSubmit($event)">
       <div class="input-container">
         <input type="text" formControlName="name" class="name form-input" placeholder="Loan name">
@@ -55,7 +56,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class Modal implements OnChanges{
   @Input() loanObject!: LoanObject;
-  @Input() modalMode: 'add' | 'edit' = 'add';
+  @Input() modalMode: 'add' | 'edit' | 'detail' = 'add';
   @Input() modalData: LoanObject | null = null
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();

@@ -77,7 +77,7 @@ export class Dashboard implements OnInit{
   modalUI: LoanUiService = inject(LoanUiService);//Modal UI signal
   openModal = this.modalUI.modalOpen
   modalMode = this.modalUI.modalMode
-  modalData = this.modalUI.editingLoan
+  modalData = this.modalUI.targetLoan
 
   filteredObjectList: LoanObject[]=[]
   display = signal<'list'|'grid'>(localStorage.getItem('viewMode') as 'grid' | 'list' || 'list')

@@ -16,7 +16,7 @@ export class App {
   modalUI: LoanUiService = inject(LoanUiService);
   modalOpen = this.modalUI.modalOpen;
   modalMode = this.modalUI.modalMode;
-  modalData = this.modalUI.editingLoan;
+  modalData = this.modalUI.targetLoan;
 
   loanService: LoanService = inject(LoanService);
 

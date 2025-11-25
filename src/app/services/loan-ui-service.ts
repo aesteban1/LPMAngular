@@ -6,11 +6,11 @@ import { LoanObject } from '../types/loan-entry';
 })
 export class LoanUiService {
   modalOpen = signal(false);
-  modalMode = signal<'add' | 'edit'>('add');
-  editingLoan = signal<LoanObject | null>(null);
+  modalMode = signal<'add' | 'edit' | 'detail'>('add');
+  targetLoan = signal<LoanObject | null>(null);
 
   openEditModal(loan: LoanObject) {
-    this.editingLoan.set(loan);
+    this.targetLoan.set(loan);
     this.modalMode.set('edit');
     this.modalOpen.set(true);
   }
@@ -22,7 +22,11 @@ export class LoanUiService {
 
   closeModal() {
     this.modalOpen.set(false);
-    this.editingLoan.set(null);
+    this.targetLoan.set(null);
     this.modalMode.set('add');
   }
+
+detailModal(loan: LoanObject) {
+
+}
 }

@@ -1,11 +1,8 @@
-import { Component, Input, Output, EventEmitter, signal, inject, effect, HostListener, ElementRef, Host} from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject, HostListener, ElementRef} from '@angular/core';
 import { type LoanObject } from '../types/loan-entry';
 import { TableModel } from '../table-model';
-import { type ColumnDef } from '../types/columnDef';
-import { LoanService } from '../services/loanService';
-import { Dropdownservice } from '../services/dropdownservice';
 import { LoanUiService } from '../services/loan-ui-service';
-import { Loadingcontent } from '../loadingcontent/loadingcontent';
+import { LoanDetailsModal } from '../loan-details-modal/loan-details-modal';
 
 @Component({
   selector: 'app-list-item',
@@ -102,9 +99,6 @@ export class ListItem {
   @Output() deleteLoanItem = new EventEmitter<number>();
   @Output() toggleAll = new EventEmitter<any>();
 
-
-
-
   private el = inject(ElementRef);
   modalUI: LoanUiService = inject(LoanUiService);
   openDropdowns = signal<Set<number>>(new Set());
@@ -146,7 +140,7 @@ export class ListItem {
   }
 
   onEdit(loanObject: LoanObject) {
-    this.modalUI.editingLoan.set(loanObject);
+    this.modalUI.targetLoan.set(loanObject);
     this.modalUI.modalMode.set('edit');
     this.modalUI.modalOpen.set(true);
     this.closeAllDropdowns();
