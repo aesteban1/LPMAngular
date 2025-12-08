@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges} from '@angular/core';
 import { LoanObject } from '../types/loan-entry';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -13,29 +13,63 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
       </h2>
       <button class="close primary" (click)="closeModal()">x</button>
     </header>
-    
+    <!--//? redesign form to be grid based, more compact and to include extra payments section -->
     <form id="form" [formGroup]="form" (submit)="onSubmit($event)">
-      <div class="input-container">
-        <input type="text" formControlName="name" class="name form-input" placeholder="Loan name">
-      </div>
-      <div class="input-container">
-        <span class="symbol">$</span>
-        <input type="number" step="0.1" min="0" formControlName="balance" class="balance form-input" placeholder="Loan Balance">
-      </div>
-      <div class="input-container">
-        <input type="number" step="0.1" min="0" formControlName="rate" class="rate form-input" placeholder="Loan APR">
-        <span class="symbol">%</span>
-      </div>
-      <div class="input-container">
-        <span class="symbol">$</span>
-        <input type="number" step="0.1" min="0" formControlName="minimum" class="minimum form-input" placeholder="Minimum payment">
-      </div>
-      <select formControlName="order" class="order form-menu">
+      <label>Loan Name
+        <div class="input-container">
+          <input type="text" formControlName="name" class="name form-input" placeholder="Loan name">
+        </div>
+      </label>
+
+      <label>Balance
+        <div class="input-container">
+          <span class="symbol">$</span>
+          <input type="number" class="balance form-input" [value]="computedBalance" placeholder="0.00" disabled>
+        </div>
+      </label>
+
+      <label>Principal
+        <div class="input-container">
+          <span class="symbol">$</span>
+          <input type="number" step="0.1" min="0" formControlName="principal" class="principal form-input" placeholder="Loan Principal">
+        </div>
+      </label>
+
+      <label>Interest
+        <div class="input-container">
+          <span class="symbol">$</span>
+          <input type="number" step="0.1" min="0" formControlName="interest" class="interest form-input" placeholder="Accrued Interest">
+        </div>
+      </label>
+
+      <label>APR
+        <div class="input-container">
+          <input type="number" step="0.1" min="0" formControlName="rate" class="rate form-input" placeholder="Loan APR">
+          <span class="symbol">%</span>
+        </div>
+      </label>
+
+      <label>Minimum Payment
+        <div class="input-container">
+          <span class="symbol">$</span>
+          <input type="number" step="0.1" min="0" formControlName="minimum" class="minimum form-input" placeholder="Minimum payment">
+        </div>
+      </label>
+
+      <!-- Delete Probably??? -->
+      <!-- I won't need to display this, only use it to determine how a specific payment is applied. -->
+      <!-- <select formControlName="order" class="order form-menu"> 
         <option value="">--Payment order--</option>
         <option value="interest">interest-first</option>
         <option value="principal">principal-first</option>
-      </select>
+      </select> -->
+       <!-- Extra payment here??? -->
+
       <div class="date-menu">
+
+        <!-- TODO: Should I set this to today by default?
+        What about specificity of time?
+        Only month/Year or full date? -->
         <span>Recent payment: </span>
         <input type="date" formControlName="date" class="payDate form-menu">
         <div class="tooltip-container">?
@@ -50,25 +84,34 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
         }
       </div>
     </form>
+
+    @if(expanded()){
+      <section class="extra-payments-section">
+
+      </section>
+    }
   </div>
   `,
   styleUrl: './modal.scss'
 })
 export class Modal implements OnChanges{
   @Input() loanObject!: LoanObject;
-  @Input() modalMode: 'add' | 'edit' | 'detail' = 'add';
+  @Input() modalMode: 'add' | 'edit' = 'add';
   @Input() modalData: LoanObject | null = null
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
   @Output() delete = new EventEmitter<number>();
   @Output() update = new EventEmitter<any>()
 
+  expanded = signal(false);
+
   form = new FormGroup({
     name: new FormControl('', {nonNullable: true}),
-    balance: new FormControl(0),
-    rate: new FormControl(0),
-    minimum: new FormControl(0),
-    order: new FormControl('interest'),
+    principal: new FormControl(),
+    interest: new FormControl(),
+    rate: new FormControl(),
+    minimum: new FormControl(),
+    // order: new FormControl('interest'),
     date: new FormControl('')
   })
 
@@ -77,10 +120,11 @@ export class Modal implements OnChanges{
       //Patch the form with the incoming data
       this.form.patchValue({
         name: this.modalData.name ?? '',
-        balance: this.modalData.balance ?? 0,
+        principal: this.modalData.principal ?? 0,
+        interest: this.modalData.interest ?? 0,
         rate: this.modalData.rate ?? 0,
         minimum: this.modalData.minimum ?? 0,
-        order: this.modalData.order ?? 'interest',
+        // order: this.modalData.order ?? 'interest',
         date: this.modalData.date ?? ''
       })
     }
@@ -110,13 +154,27 @@ export class Modal implements OnChanges{
     this.delete.emit(this.modalData?.id);
   }
 
+  getBalance(): number {
+    if(this.modalData) {
+      return this.modalData.principal! + this.modalData.interest!;
+    }
+    return 0;
+  }
+
+  get computedBalance(): number {
+    const principal = this.form.get('principal')?.value || 0;
+    const interest = this.form.get('interest')?.value || 0;
+    return principal + interest;
+  }
+
   closeModal() {
     this.form.reset({
       name: '',
-      balance: 0,
+      principal: 0,
+      interest: 0,
       rate: 0,
       minimum: 0,
-      order: 'interest',
+      // order: 'interest',
       date: ''
     })
     this.close.emit()

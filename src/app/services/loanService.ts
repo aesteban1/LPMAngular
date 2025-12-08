@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { type LoanObject } from '../types/loan-entry';
+import { LoanHistoryEntry, type LoanObject } from '../types/loan-entry';
+import { buildProjectionForLoan } from '../utilities/loan-projection';
 
 
 @Injectable({
@@ -22,6 +23,20 @@ export class LoanService {
     this.loanObjectList.update(list => 
       list.map(item => item.id === updated.id ? updated : item)
     );
+  }
+
+  //Todo: What about manually added history entries?
+  //Todo: Manually added payments? Random extra payments? New modal? or inline editing? service method to add history entry or extra payments?
+
+  getSchedule(loan: LoanObject): LoanHistoryEntry[]{
+    const history = loan.history ?? []
+
+    const lastEntry = history[history.length -1]; //get last history entry
+    const startDate = lastEntry?.date ?? new Date(Date.now()).toISOString().slice(0,10);
+
+    const projection = buildProjectionForLoan(loan, startDate);
+
+    return [...history, ...projection];
   }
 
   async getAllLoans():Promise<LoanObject[]> {

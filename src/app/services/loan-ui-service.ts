@@ -6,8 +6,11 @@ import { LoanObject } from '../types/loan-entry';
 })
 export class LoanUiService {
   modalOpen = signal(false);
-  modalMode = signal<'add' | 'edit' | 'detail'>('add');
+  modalMode = signal<'add' | 'edit'>('add');
+  detailsOpen = signal(false);
+
   targetLoan = signal<LoanObject | null>(null);
+
 
   openEditModal(loan: LoanObject) {
     this.targetLoan.set(loan);
@@ -20,13 +23,20 @@ export class LoanUiService {
     this.modalOpen.set(true);
   }
 
+  openDetails(loan: LoanObject) {
+    this.targetLoan.set(loan);
+    this.detailsOpen.set(true);
+  }
+
   closeModal() {
     this.modalOpen.set(false);
     this.targetLoan.set(null);
     this.modalMode.set('add');
   }
 
-detailModal(loan: LoanObject) {
+  closeDetails() {
+    this.detailsOpen.set(false);
+    this.targetLoan.set(null);
+  }
 
-}
 }

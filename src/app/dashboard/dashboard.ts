@@ -91,10 +91,18 @@ export class Dashboard implements OnInit{
   ngOnInit(){
     this.table.setColumns([
       {key:'name', label:'Name',visible:true, sortable:true, direction:null},
-      {key:'balance', label:'Balance',visible:true, sortable:true, direction:null},
+      {key:'principal', label:'Principal',visible:true, sortable:true, direction:null},
+      {key:'interest', label:'Interest',visible:true, sortable:true, direction:null},
+      {
+        key:'balance',
+        label:'Balance',
+        visible:true,
+        sortable:true,
+        direction:null,
+        value: (loan) => loan.principal + loan.interest
+      },
       {key:'rate', label:'Rate',visible:true, sortable:true, direction:null},
       {key:'minimum', label:'Minimum',visible:true, sortable:true, direction:null},
-      {key:'order', label:'Pay Order',visible:true, sortable:true, direction:null},
       {key:'date', label:'Last Payment',visible:true, sortable:true, direction:null}
     ]);
 

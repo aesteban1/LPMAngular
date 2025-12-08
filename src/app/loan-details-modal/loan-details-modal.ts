@@ -1,17 +1,18 @@
-import { Component, Input, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { LoanObject } from '../types/loan-entry';
-import { NgApexchartsModule, ApexChart, ApexXAxis } from 'ng-apexcharts';
+import { NgApexchartsModule, ApexChart, ApexXAxis, ApexOptions} from 'ng-apexcharts';
 import { NgIf } from '@angular/common';
+import { LoanService } from '../services/loanService';
 
 @Component({
   selector: 'app-loan-details-modal',
   standalone: true,
   imports: [NgApexchartsModule, NgIf],
   template: `
-    <div class="modal">
+    <div class="modal-content">
       <header>
         <h2>{{loan.name}} Details</h2>
-        <!-- Add A Close Button -->
+        <button class="close primary" (click)="closeModal()">x</button>
       </header>
 
       <section class="chart-section" *ngIf="series.length > 0; else noHistory">
@@ -19,9 +20,16 @@ import { NgIf } from '@angular/common';
           [series]="series"
           [chart]="chart"
           [xaxis]="xaxis"
+          [tooltip]="tooltip"
+          [stroke]="stroke"
         ></apx-chart>
       </section>
-
+      <section>
+        <!--Todo: additional loan details/stats
+        //probably in cards below the chart
+        //what stats would be useful?
+        //chart types?-->
+      </section>
       <ng-template #noHistory>
         <p>No historical data available for this loan.</p>
       </ng-template>
@@ -31,38 +39,65 @@ import { NgIf } from '@angular/common';
 })
 export class LoanDetailsModal {
   @Input({required: true}) loan!: LoanObject;
+  @Output() close = new EventEmitter<void>();
+
+  loanService = inject(LoanService);
 
   //Apex Types
   series: ApexAxisChartSeries = [];
   chart: ApexChart = {
     type: 'line',
-    height: 350,
+    height: 600,
+    width: '100%',
     toolbar: {
-      show: true
+      show: false
     }
   };
   xaxis:ApexXAxis = {
     categories: []
   };
 
+  tooltip:ApexTooltip = {
+    enabled: true,
+    shared: true,
+    theme: 'dark'
+  };
+
+  stroke = {
+    width: [3, 2],
+    dashArray: [0, 6]
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['loan'] && this.loan && this.loan.history &&  this.loan.history.length > 0) {
-      const history = this.loan.history;
+    if(changes['loan'] && this.loan) {
+      const schedule = this.loanService.getSchedule(this.loan);
+      
+      const history = schedule.filter(entry => entry.kind === "history");
+      const projection = schedule.filter(entry => entry.kind === "projection");
 
       this.series = [
         {
-          name: 'Balance',
-          data: history.map(entry => entry.balance)
+          name: 'Balance (Actual)',
+          data: schedule.map(entry =>
+            entry.kind === 'history' ? entry.balance : null
+          )
+        },
+        {
+          name: 'Balance (Projected)',
+          data: schedule.map(entry =>
+            entry.kind === 'projection' ? entry.balance : null
+          )
         }
       ];
 
       this.xaxis = {
         ...this.xaxis,
-        categories: history.map(entry => entry.date)
+        categories: schedule.map(entry => entry.date)
       };
-    } else {
-      this.series = [];
-      this.xaxis = {...this.xaxis, categories: [] };
     }
+  }
+
+  closeModal() {
+    this.close.emit();
   }
 }

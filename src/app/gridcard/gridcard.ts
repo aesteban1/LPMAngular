@@ -21,7 +21,7 @@ import { Dropdownservice } from '../services/dropdownservice';
               [class.openDropdown]="showDropdown()"
               [class.closeDropdown]="!showDropdown()">
                 <li class="dropdown-item expand-btn">
-                  <button (click)="onExpand()">
+                  <button (click)="onExpand(loanObject)">
                     <img src="./assets/expand.svg" alt="expand">Expand
                   </button>
                 </li>
@@ -41,7 +41,7 @@ import { Dropdownservice } from '../services/dropdownservice';
         </header>
         <li>
           <span class="label">Balance: </span>
-          <p>$\{{loanObject.balance.toFixed(2)}}</p>
+          <p>$\{{getBalance().toFixed(2)}}</p>
         </li>
         <li>
           <span class="label">Interest Rate: </span>
@@ -125,12 +125,18 @@ export class Gridcard {
     this.closeDropdown();
   }
 
-  onExpand() {
-    console.log('expand clicked!');
+  onExpand(loan: LoanObject) {
+    this.modalUI.targetLoan.set(loan);
+    this.modalUI.detailsOpen.set(true);
+    this.closeDropdown();
   }
 
   onClick() {
     if(this.selectMode) this.toggleSelection.emit(this.loanObject.id)
+  }
+
+  getBalance(): number {
+    return this.loanObject.principal + this.loanObject.interest;
   }
 
   formatDate(d?: string) {

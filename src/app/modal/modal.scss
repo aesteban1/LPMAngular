@@ -28,20 +28,16 @@
   button{
     height: fit-content;
     padding: 0.3rem 0.6rem 0.4rem;
-    // font-size: 1rem;
-    // line-height: 1.2rem;
-
   }
 }
 
 .modal-content form{
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 0.5fr);
   gap: 1.5rem;
-  justify-content: space-between;
   height: 90%;
-  width: 20rem;
-  margin: 0 auto;
+  width: 100%;
 }
 
 input::-webkit-outer-spin-button,
@@ -59,10 +55,17 @@ h2{
   margin: 0.5rem 0;
 }
 
+label{
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
 .input-container{
   height: 2.5rem;
   max-width: 14rem;
   background-color: #2a2a2a;
+  margin-top: 0.5rem;
 }
 
 .symbol {
@@ -70,6 +73,7 @@ h2{
   font-size: 1rem;
   text-align: center;
   width: 10%;
+
 }
 
 .input-container:nth-child(2n+1) .symbol{
@@ -93,7 +97,16 @@ h2{
   height: 100%;
   margin: 0;
   padding: 0;
-  min-width: 90%;
+  width: 90%;
+}
+
+.input-container:has(.balance){
+  background-color: hsl(0, 0%,20%);
+  outline: 1px solid hsl(0, 0%, 50%);
+  & .balance{
+    opacity: 0.8;
+    background-color: hsl(0, 0%, 20%);
+  }
 }
 
 .name{
@@ -103,7 +116,7 @@ h2{
 .form-menu{
   cursor: pointer;
   height: 1.2rem;
-  width: fit-content;
+  width: 75%;
   padding: 0.5rem 0;
   box-sizing: content-box;
   display: inline-block;

@@ -1,11 +1,12 @@
 import {signal, computed } from '@angular/core'
 import { ColumnDef } from './types/columnDef'
 
+type columnKey<T> = keyof T | string; //allow string for computed columns
+
 export class TableModel<T extends Record<string, any>> {
-  //reactive state
-  private _data = signal<T[]>([]);
-  private _columns = signal<ColumnDef<T>[]>([]);
-  private _sort = signal<{key: keyof T; dir: 'asc' | 'desc' } | null>(null);
+  private _data = signal<T[]>([]);  //table data rows
+  private _columns = signal<ColumnDef<T>[]>([]);  //column definitions
+  private _sort = signal<{key: columnKey<T>; dir: 'asc' | 'desc' } | null>(null); //current sort state
 
   //expose read-only signals (for component use)
   data = this._data.asReadonly();
@@ -17,17 +18,27 @@ export class TableModel<T extends Record<string, any>> {
 
   //computed view
   view = computed(() => {
-    ///Updated automaically when _data or _sort change
-    const data = this._data();
-    const sort = this.sort();
+    const rows = this._data();  //get current data
+    const active = this._sort(); //get current sort state
+    if(!active) return rows; //no sorting applied
 
-    if(!sort) return data; //sort is not defined, use default sort order
+    const cols = this._columns(); //get current columns
+    const col = cols.find(c => c.key === active.key); //find the active sort column
+    if(!col) return rows; //invalid column key
 
-    const { key, dir } = sort;
-    const direction = dir === 'asc' ? 1 : -1; //retrieve the sort direction
+    const getSortvalue = (row: T): unknown => {
+      if(col.sortValue) return col.sortValue(row);  //use custom sortValue function if provided
+      if(col.value) return col.value(row);  //use custom value function if provided
+      return (row as any)[col.key] ?? undefined; //default to direct property access
+    };
 
-    return data.sort((a,b) => this.compareValues(a[key], b[key]) * direction)
-  });
+    const direction = active.dir === 'asc' ? 1 : -1;  //sort direction multiplier
+
+    //return sorted copy of data
+    return [...rows].sort((a,b) => {
+      return this.compareValues(getSortvalue(a), getSortvalue(b)) * direction;  //compare and apply direction
+    });
+  })
 
   //basic API
   setData(data: T[]) {
@@ -39,8 +50,9 @@ export class TableModel<T extends Record<string, any>> {
   }
 
   //Cycles through the sort options
-  sortBy(key: keyof T) {
-    const current = this._sort();
+  sortBy(key: columnKey<T>) {
+    const current = this._sort(); //get current sort state
+
     if(!current || current.key !== key) {
       this._sort.set({key, dir: 'asc'})
     } else if (current.dir === 'asc') {
@@ -50,27 +62,43 @@ export class TableModel<T extends Record<string, any>> {
     }
   }
 
-  //obtains data given a variable (row) and a type (T) to look for
-  getCell(row: T, key: keyof T) {
-    if(key === 'balance' || key === 'minimum') {
-      return `$${row[key].toFixed(2)}`
-    }else if(key === 'rate'){
-      return `${row[key].toFixed(2)}%`
+  //Returns formatted cell value based on column key
+  getCell(row: T, col: ColumnDef<T>): unknown {
+    const key = col.key;
+
+    //Get raw value using value function or direct property access
+    const raw = col.value
+      ? col.value(row) 
+      : (row as any)[key];
+
+    if(key === 'principal' || key === 'minimum' || key === 'interest' || key === 'balance') {
+      if(raw == null || raw == '') return '$0.00';
+      const num = typeof raw === 'number' ? raw : Number(raw);
+      
+      return `$${num.toFixed(2)}`; //format as currency
     }
-    return row[key];
+
+    if(key === 'rate') {
+      if(raw ==null || raw == '') return '0.00%';
+      const num = typeof raw === 'number' ? raw : Number(raw);
+      return `${num.toFixed(2)}%`; //format as percentage
+    }
+
+    return raw; //return raw value
   }
 
   //Toggles the visibility property for ColumnDef data types
-  toggleColumn(key: keyof T){
+  toggleColumn(key: columnKey<T>) {
     this._columns.update(cols => {
-      const visibleCount = cols.filter(c => c.visible).length;
+      const visibleCount = cols.filter(c => c.visible).length;  //current count of visible columns
 
       return cols.map(c => {
-        if(c.key !== key) return c;
-        //prevent hiding below the minimum columns displayable (3)
-        if(visibleCount <= 3 && c.visible) return c;
+        if(c.key !== key) return c; //not the target column, return as-is
 
-        return {...c, visible: !c.visible};
+         //If hiding, ensure we don't go below minimum visible columns (3)
+        if(visibleCount <= 3 && c.visible) return c;  //prevent hiding below the minimum columns displayable (3)
+
+        return {...c, visible: !c.visible}; //toggle visibility
       });
     });
   }

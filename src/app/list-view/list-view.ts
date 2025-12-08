@@ -21,7 +21,7 @@ import { LoanDetailsModal } from '../loan-details-modal/loan-details-modal';
               {{col.label}}
               @if(table.sort()?.key === col.key){
                 <span class="sort-indicator">
-                  {{table.sort()?.dir === 'asc' ? '⬇' : '⬆'}}
+                  {{table.sort()?.dir === 'asc' ? '⬆' : '⬇'}}
                 </span>
               }
               </th>
@@ -46,7 +46,9 @@ import { LoanDetailsModal } from '../loan-details-modal/loan-details-modal';
           [class.selected]="selectedIds.has(loan.id)">
             @for(col of table.columns(); track col.key){
               @if(col.visible) {
-                <td>{{table.getCell(loan, col.key)}}</td>
+                <td>
+                    {{table.getCell(loan,col)}}
+                </td>
               }
             }
             @if(selectMode) {
@@ -64,7 +66,7 @@ import { LoanDetailsModal } from '../loan-details-modal/loan-details-modal';
                   [class.openDropdown]="openDropdowns().has(loan.id)"
                   [class.closeDropdown]="!openDropdowns().has(loan.id)">
                     <li class="dropdown-item expand-btn">
-                      <button (click)="onExpand()">
+                      <button (click)="onExpand(loan)">
                         <img src="./assets/expand.svg" alt="expand">Expand
                       </button>
                     </li>
@@ -146,8 +148,10 @@ export class ListItem {
     this.closeAllDropdowns();
   }
 
-  onExpand() {
-    console.log('expand clicked!')
+  onExpand(loanObject: LoanObject) {
+    this.modalUI.targetLoan.set(loanObject)
+    this.modalUI.detailsOpen.set(true);
+    this.closeAllDropdowns();
   }
 
   formatDate(d: string) {

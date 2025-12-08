@@ -2,12 +2,17 @@
   <header>Loan Optimizer</header>
   @if (modalOpen()) {
     <app-modal 
-    (close)="closeModal()" 
+    (close)="closeEntryModal()" 
     (save)="addLoanToList($event)"
     (delete)="deleteLoanItem($event)"
     (update)="updateLoanItem($event)"
     [modalMode]="modalMode()" 
     [modalData]="this.modalData()"></app-modal>
+  }
+  @if (detailsOpen()) {
+    <app-loan-details-modal
+    [loan]="this.modalData()!"
+    (close)="closeDetailsModal()"></app-loan-details-modal>
   }
   <div class="content">
     <app-dashboard></app-dashboard>
