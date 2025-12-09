@@ -1,4 +1,4 @@
-export type extraPayment = {
+export type ExtraPayment = {
   amount: number,
   date: string, //ISO date
   note?: string
@@ -25,5 +25,5 @@ export interface LoanObject {
   date?: string, //ISO date of last payment
   order: "interest" | "principal",  //payment allocation order
   history?: LoanHistoryEntry[] //array of history entries
-  extraPayments?: extraPayment[] //array of extra payments
+  extraPayments?: ExtraPayment[] //array of extra payments
 }

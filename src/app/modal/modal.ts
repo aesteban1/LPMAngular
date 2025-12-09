@@ -9,7 +9,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   <div class="modal-content">
     <header>
       <h2>
-        {{modalMode == "edit" ? 'Editing Loan Entry' : 'Add New Entry'}}
+        {{modalMode == "edit" ? 'Editing Loan Entry' : 'Adding New Entry'}}
       </h2>
       <button class="close primary" (click)="closeModal()">x</button>
     </header>
@@ -65,17 +65,14 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
       </select> -->
        <!-- Extra payment here??? -->
 
-      <div class="date-menu">
-
-        <!-- TODO: Should I set this to today by default?
-        What about specificity of time?
-        Only month/Year or full date? -->
-        <span>Recent payment: </span>
-        <input type="date" formControlName="date" class="payDate form-menu">
-        <div class="tooltip-container">?
-          <span class="tooltip-text">If there is no recent payment, select toady's date</span>
+      <label class="date-menu">Recent payment
+        <div class="input-container">
+          <input type="date" formControlName="date" class="payDate form-menu">
+          <div class="tooltip-container">?
+            <span class="tooltip-text">If there is no recent payment, select toady's date</span>
+          </div>
         </div>
-      </div>
+      </label>
       <div class="actions">
         <button class="primary" type="button" (click)="closeModal()">Cancel</button>
         <button class="primary" type="submit">Save</button>
