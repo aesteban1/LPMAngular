@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges} from '@angular/core';
-import { LoanObject } from '../types/loan-entry';
+import { ExtraPayment, LoanObject } from '../types/loan-entry';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table';
 
 @Component({
   selector: 'app-modal',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ExtraPaymentsTable],
   template: `
-  <div class="modal-content">
+  <div class="modal-content"
+  [class.expanded] = "expanded()">
     <header>
       <h2>
         {{modalMode == "edit" ? 'Editing Loan Entry' : 'Adding New Entry'}}
@@ -73,7 +75,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
           </div>
         </div>
       </label>
+
       <div class="actions">
+        <button class="primary more-details" type="button" (click)="toggleExpansion()"> More Details</button>
         <button class="primary" type="button" (click)="closeModal()">Cancel</button>
         <button class="primary" type="submit">Save</button>
         @if(modalMode === 'edit'){
@@ -81,13 +85,14 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
         }
       </div>
     </form>
-
-    @if(expanded()){
-      <section class="extra-payments-section">
-
-      </section>
-    }
   </div>
+  @if(expanded()){
+    <section class="extra-payments-section">
+      <app-extra-payments-table 
+      (paymentsChange)="updateExtraPayments($event)">
+      </app-extra-payments-table>
+    </section>
+  }
   `,
   styleUrl: './modal.scss'
 })
@@ -149,6 +154,14 @@ export class Modal implements OnChanges{
   onDelete(event: MouseEvent) {
     event.stopPropagation();
     this.delete.emit(this.modalData?.id);
+  }
+
+  toggleExpansion() {
+    this.expanded.update( b => !b);
+  }
+
+  updateExtraPayments(array: ExtraPayment[]) {
+    this.loanObject.extraPayments = [...array]
   }
 
   getBalance(): number {

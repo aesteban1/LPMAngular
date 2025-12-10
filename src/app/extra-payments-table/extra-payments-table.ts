@@ -28,7 +28,7 @@ import { TableModel } from '../table-model';
         </tr>
       </thead>
       <tbody>
-        @for(payment of table.view(); track payment) {
+        @for(payment of table.view(); track payment.amount) {
           <td>{{payment.date}}</td>
           <td>{{payment.amount || 0}}</td> <!--//?decimal pipe -->
           <td>{{payment.note || '---'}}</td>
