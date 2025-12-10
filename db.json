@@ -3,65 +3,135 @@
     {
       "id": "1",
       "name": "Car Loan",
-      "balance": 14500,
+      "interest": 0,
+      "principal": 14500,
       "rate": 4.2,
       "minimum": 280,
       "order": "interest",
-      "date": "2024-07-15"
+      "date": "2024-08-15",
+      "history": [
+        {
+          "date": "2024-01-01",
+          "balance": 14500,
+          "interestAccrued": 0,
+          "principalPaid": 0,
+          "paymentMade": 0,
+          "kind": "history"
+        },
+        {
+          "date": "2024-02-01",
+          "interestAccrued": 50.75,
+          "paymentMade": 280,
+          "principalPaid": 229.25,
+          "balance": 14779.25,
+          "kind": "history"
+        },
+        {
+          "date": "2024-03-01",
+          "interestAccrued": 51.23,
+          "paymentMade": 280,
+          "principalPaid": 228.77,
+          "balance": 14550.48,
+          "kind": "history"
+        },
+        {
+          "date": "2024-04-01",
+          "interestAccrued": 50.93,
+          "paymentMade": 280,
+          "principalPaid": 229.07,
+          "balance": 14321.41,
+          "kind": "history"
+        },
+        {
+          "date": "2024-05-01",
+          "interestAccrued": 50.62,
+          "paymentMade": 280,
+          "principalPaid": 229.38,
+          "balance": 14092.03,
+          "kind": "history"
+        },
+        {
+          "date": "2024-06-01",
+          "interestAccrued": 50.32,
+          "paymentMade": 280,
+          "principalPaid": 229.68,
+          "balance": 13862.35,
+          "kind": "history"
+        },
+        {
+          "date": "2024-07-01",
+          "interestAccrued": 49.99,
+          "paymentMade": 280,
+          "principalPaid": 230.01,
+          "balance": 13632.34,
+          "kind": "history"
+        }
+      ]
     },
     {
       "id": "3",
       "name": "Student Loan B",
-      "balance": 18000,
+      "interest": 0,
+      "principal": 18000,
       "rate": 4.9,
       "minimum": 200,
       "date": "2024-09-01",
-      "order": "interest"
+      "order": "interest",
+      "history": []
     },
     {
       "id": "4",
       "name": "Credit Card",
-      "balance": 7000,
+      "interest": 0,
+      "principal": 7000,
       "rate": 18.9,
       "minimum": 150,
       "order": "interest",
-      "date": "2024-07-05"
+      "date": "2024-07-05",
+      "history": []
     },
     {
       "id": "5",
       "name": "Mortgage",
-      "balance": 210000,
+      "principal": 210000,
+      "interest": 0,
       "rate": 3.6,
-      "minimum": 1200,
-      "date": "2024-06-01",
-      "order": "principal"
+      "minimum": 5000,
+      "order": "principal",
+      "date": "2024-06-01"
     },
     {
       "id": "6",
       "name": "Personal Loan",
-      "balance": 10000,
+      "interest": 0,
+      "principal": 10000,
       "rate": 7.8,
       "minimum": 185,
       "order": "interest",
-      "date": "2024-10-01"
+      "date": "2024-10-01",
+      "history": []
     },
     {
       "id": "7",
       "name": "Medical Debt",
-      "balance": 4200,
+      "interest": 0,
+      "principal": 4200,
       "rate": 2.5,
       "minimum": 90,
       "date": "2024-07-20",
-      "order": "principal"
+      "order": "principal",
+      "history": []
     },
     {
       "id": "8",
       "name": "Buy Now Pay Later",
-      "balance": 1200,
+      "interest": 0,
+      "principal": 1200,
       "rate": 0,
       "minimum": 100,
       "date": "2024-08-15",
-      "order": "principal"
+      "order": "principal",
+      "history": []
     }
   ]
 }
