@@ -18,7 +18,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
     <!--//? redesign form to be grid based, more compact and to include extra payments section -->
     <form id="form" [formGroup]="form" (submit)="onSubmit($event)">
 
-    <div class="main-form-content">
+    <section class="main-form-content">
       <label>Loan Name
         <div class="input-container">
           <input type="text" formControlName="name" class="name form-input" placeholder="Loan name">
@@ -69,7 +69,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
         </div>
       </label>
       
-    </div>
+</section>
 
       @if(expanded()){
         <section class="extra-payments-section">
