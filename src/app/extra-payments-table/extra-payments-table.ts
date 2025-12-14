@@ -13,27 +13,29 @@ import { TableModel } from '../table-model';
     </div>
 
     @if(table.view().length > 0) {
-      <thead>
-        <tr>
-          @for(col of table.columns(); track col.key) {
-            <th
-            [class.sortable] = "col.sortable"
-            (click)="col.sortable && table.sortBy(col.key)">
-            {{col.label}}
-              @if(table.sort()?.key === col.key){
-                {{table.sort()?.dir === 'asc' ? '⬇' : '⬆'}}
-              }
-            </th>
+      <table>
+        <thead>
+          <tr>
+            @for(col of table.columns(); track col.key) {
+              <th
+              [class.sortable] = "col.sortable"
+              (click)="col.sortable && table.sortBy(col.key)">
+              {{col.label}}
+                @if(table.sort()?.key === col.key){
+                  {{table.sort()?.dir === 'asc' ? '⬇' : '⬆'}}
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for(payment of table.view(); track payment.amount) {
+            <td>{{payment.date}}</td>
+            <td>{{payment.amount || 0}}</td> //?decimal pipe
+            <td>{{payment.note || '---'}}</td>
           }
-        </tr>
-      </thead>
-      <tbody>
-        @for(payment of table.view(); track payment.amount) {
-          <td>{{payment.date}}</td>
-          <td>{{payment.amount || 0}}</td> <!--//?decimal pipe -->
-          <td>{{payment.note || '---'}}</td>
-        }
-      </tbody>
+        </tbody>
+      </table>
     } @else {
       <p>No Extra payments defined.</p>
     }
@@ -63,7 +65,6 @@ export class ExtraPaymentsTable implements OnChanges{
   }
 
   addPayment() {
-
     //!placeholder variable for testing
     //!Real variable will use the user's input
     const next: ExtraPayment = {
@@ -74,7 +75,7 @@ export class ExtraPaymentsTable implements OnChanges{
 
     const updated = [...this.payments, next];
     this.paymentsChange.emit(updated); //*We emit it so that the loan object that is owned by the modal, which owns the extraPayments array gets the new data
-    this.table.setData(updated);
+    this.table.setData(updated); 
   }
   
   removePayement(index: number) {
@@ -82,6 +83,4 @@ export class ExtraPaymentsTable implements OnChanges{
     this.paymentsChange.emit(updated);
     this.table.setData(updated);
   }
-
-
 }

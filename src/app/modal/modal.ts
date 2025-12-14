@@ -17,6 +17,8 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
     </header>
     <!--//? redesign form to be grid based, more compact and to include extra payments section -->
     <form id="form" [formGroup]="form" (submit)="onSubmit($event)">
+
+    <div class="main-form-content">
       <label>Loan Name
         <div class="input-container">
           <input type="text" formControlName="name" class="name form-input" placeholder="Loan name">
@@ -58,15 +60,6 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
         </div>
       </label>
 
-      <!-- Delete Probably??? -->
-      <!-- I won't need to display this, only use it to determine how a specific payment is applied. -->
-      <!-- <select formControlName="order" class="order form-menu"> 
-        <option value="">--Payment order--</option>
-        <option value="interest">interest-first</option>
-        <option value="principal">principal-first</option>
-      </select> -->
-       <!-- Extra payment here??? -->
-
       <label class="date-menu">Recent payment
         <div class="input-container">
           <input type="date" formControlName="date" class="payDate form-menu">
@@ -75,6 +68,17 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
           </div>
         </div>
       </label>
+      
+    </div>
+
+      @if(expanded()){
+        <section class="extra-payments-section">
+          <app-extra-payments-table 
+          (paymentsChange)="updateExtraPayments($event)"
+          [payments]="loanObject.extraPayments ? loanObject.extraPayments : []">
+          </app-extra-payments-table>
+        </section>
+      }
 
       <div class="actions">
         <button class="primary more-details" type="button" (click)="toggleExpansion()"> More Details</button>
@@ -86,13 +90,6 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
       </div>
     </form>
   </div>
-  @if(expanded()){
-    <section class="extra-payments-section">
-      <app-extra-payments-table 
-      (paymentsChange)="updateExtraPayments($event)">
-      </app-extra-payments-table>
-    </section>
-  }
   `,
   styleUrl: './modal.scss'
 })
@@ -107,13 +104,14 @@ export class Modal implements OnChanges{
 
   expanded = signal(false);
 
+  extraPaymetsData: ExtraPayment[] = [];
+
   form = new FormGroup({
     name: new FormControl('', {nonNullable: true}),
     principal: new FormControl(),
     interest: new FormControl(),
     rate: new FormControl(),
     minimum: new FormControl(),
-    // order: new FormControl('interest'),
     date: new FormControl('')
   })
 
@@ -161,6 +159,7 @@ export class Modal implements OnChanges{
   }
 
   updateExtraPayments(array: ExtraPayment[]) {
+    console.log(this.loanObject, array)
     this.loanObject.extraPayments = [...array]
   }
 
