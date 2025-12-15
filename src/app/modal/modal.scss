@@ -174,7 +174,7 @@ label{
   gap: 2rem;
   width: 100%;
   max-width: 25rem;
-  margin-top: 1.5rem;
+  // margin-top: 1.5rem;
   // align-self:flex-end;
 }
 
@@ -188,5 +188,5 @@ label{
   grid-column: 2;
   grid-row: 1 / span 1;
   height: 100%;
-  background-color: red;
+  background-color: rgba(160, 160, 160, 0.5);
 }

@@ -75,7 +75,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
         <section class="extra-payments-section">
           <app-extra-payments-table 
           (paymentsChange)="updateExtraPayments($event)"
-          [payments]="loanObject.extraPayments ? loanObject.extraPayments : []">
+          [payments]="extraPayments">
           </app-extra-payments-table>
         </section>
       }
@@ -94,7 +94,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
   styleUrl: './modal.scss'
 })
 export class Modal implements OnChanges{
-  @Input() loanObject!: LoanObject;
+  @Input() loanObject?: LoanObject;
   @Input() modalMode: 'add' | 'edit' = 'add';
   @Input() modalData: LoanObject | null = null
   @Output() close = new EventEmitter<void>();
@@ -112,7 +112,7 @@ export class Modal implements OnChanges{
     interest: new FormControl(),
     rate: new FormControl(),
     minimum: new FormControl(),
-    date: new FormControl('')
+    date: new FormControl(''),
   })
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -159,21 +159,17 @@ export class Modal implements OnChanges{
   }
 
   updateExtraPayments(array: ExtraPayment[]) {
-    console.log(this.loanObject, array)
-    this.loanObject.extraPayments = [...array]
-  }
-
-  getBalance(): number {
-    if(this.modalData) {
-      return this.modalData.principal! + this.modalData.interest!;
-    }
-    return 0;
+    this.extraPaymetsData = [...array];
   }
 
   get computedBalance(): number {
     const principal = this.form.get('principal')?.value || 0;
     const interest = this.form.get('interest')?.value || 0;
     return principal + interest;
+  }
+
+  get extraPayments(): ExtraPayment[] {
+    return this.loanObject?.extraPayments ?? []
   }
 
   closeModal() {

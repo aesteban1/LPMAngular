@@ -43,7 +43,7 @@ import { TableModel } from '../table-model';
   styleUrl: './extra-payments-table.scss'
 })
 export class ExtraPaymentsTable implements OnChanges{
-  @Input() payments: ExtraPayment[] = [];
+  @Input() payments!: ExtraPayment[];
   @Output() paymentsChange = new EventEmitter<ExtraPayment[]>();
 
   //*create the table using the table model class
