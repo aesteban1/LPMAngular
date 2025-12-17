@@ -9,7 +9,7 @@ import { TableModel } from '../table-model';
   template: `
     <div class="extra-payments-header">
       <h3>Extra Payments</h3>
-      <button type="button" class="primary" (click)="addPayment()">+ Add payment</button>
+      <button type="button" class="primary" (click)="addPayment()">Add payment</button>
     </div>
 
     @if(table.view().length > 0) {
@@ -29,11 +29,13 @@ import { TableModel } from '../table-model';
           </tr>
         </thead>
         <tbody>
-          @for(payment of table.view(); track payment.amount) {
-            <td>{{payment.date}}</td>
-            <td>{{payment.amount || 0}}</td> //?decimal pipe
-            <td>{{payment.note || '---'}}</td>
-          }
+            @for(payment of table.view(); track $index) {
+              <tr>
+                <td>{{payment.date}}</td>
+                <td>{{payment.amount || 0}}</td> //?decimal pipe
+                <td>{{payment.note || '---'}}</td>
+              </tr>
+            }
         </tbody>
       </table>
     } @else {
@@ -43,8 +45,10 @@ import { TableModel } from '../table-model';
   styleUrl: './extra-payments-table.scss'
 })
 export class ExtraPaymentsTable implements OnChanges{
-  @Input() payments!: ExtraPayment[];
-  @Output() paymentsChange = new EventEmitter<ExtraPayment[]>();
+
+  @Input() payments: ExtraPayment[] = []; //*Can be a loan's defined extra payments or a new loan's extra payments
+
+  @Output() paymentsChange = new EventEmitter<ExtraPayment[]>(); //*We emit the updated extra payments to the parent component so that it can update its loan object
 
   //*create the table using the table model class
   table =  new TableModel<ExtraPayment>();
@@ -73,11 +77,14 @@ export class ExtraPaymentsTable implements OnChanges{
       note: ''
     }
 
-    const updated = [...this.payments, next];
-    this.paymentsChange.emit(updated); //*We emit it so that the loan object that is owned by the modal, which owns the extraPayments array gets the new data
-    this.table.setData(updated); 
+    const updated = [...(this.payments ?? []), next];
+
+    this.payments = updated;
+    console.log(updated);
+    this.table.setData(updated);
+    this.paymentsChange.emit(updated); //*We emit it so that the array can be used by the modal to update or create a loan object
   }
-  
+
   removePayement(index: number) {
     const updated = this.payments.filter((_, i) => i != index);
     this.paymentsChange.emit(updated);

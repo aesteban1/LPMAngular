@@ -74,7 +74,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
       @if(expanded()){
         <section class="extra-payments-section">
           <app-extra-payments-table 
-          (paymentsChange)="updateExtraPayments($event)"
+          (paymentsChange)="extraPaymentsData = $event"
           [payments]="extraPayments">
           </app-extra-payments-table>
         </section>
@@ -104,7 +104,7 @@ export class Modal implements OnChanges{
 
   expanded = signal(false);
 
-  extraPaymetsData: ExtraPayment[] = [];
+  extraPaymentsData: ExtraPayment[] = [];
 
   form = new FormGroup({
     name: new FormControl('', {nonNullable: true}),
@@ -115,6 +115,8 @@ export class Modal implements OnChanges{
     date: new FormControl(''),
   })
 
+
+  //For editing existing loan, patch the form with incoming data
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['modalData'] && this.modalData) {
       //Patch the form with the incoming data
@@ -127,6 +129,10 @@ export class Modal implements OnChanges{
         // order: this.modalData.order ?? 'interest',
         date: this.modalData.date ?? ''
       })
+    
+      this.extraPaymentsData = [...(this.modalData.extraPayments ?? [])];
+    } else {
+      this.extraPaymentsData = [];
     }
   }
 
@@ -140,10 +146,21 @@ export class Modal implements OnChanges{
     event.preventDefault();
     if(this.form.invalid) return;
 
-    const data = this.form.value as Omit<LoanObject, 'id'>
+    const formData = this.form.value as Partial<LoanObject>
+    const data: Omit<LoanObject, 'id'> = {
+      name:formData.name ?? '',
+      principal: formData.principal ?? 0,
+      interest: formData.interest ?? 0,
+      rate: formData.rate ?? 0,
+      minimum: formData.minimum ?? 0,
+      date: formData.date ?? '',
+      extraPayments: this.extraPaymentsData,
+      order: 'interest'
+    }
+
 
     if(this.modalMode === "edit" && this.modalData){
-      this.update.emit({id: this.modalData.id, ...data})
+      this.update.emit({id: this.modalData.id, ...data});
     }else{
       this.save.emit(data);
     }
@@ -159,7 +176,7 @@ export class Modal implements OnChanges{
   }
 
   updateExtraPayments(array: ExtraPayment[]) {
-    this.extraPaymetsData = [...array];
+    this.extraPaymentsData = [...array];
   }
 
   get computedBalance(): number {
@@ -182,7 +199,8 @@ export class Modal implements OnChanges{
       // order: 'interest',
       date: ''
     })
-    this.close.emit()
+    this.extraPaymentsData = [];
+    this.close.emit();
   }
 
 }

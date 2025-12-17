@@ -16,13 +16,17 @@
   padding: 3rem 2.5rem;
   border-radius: 20px;
   background-color: rgb(58, 58, 58);
+  transition: all 0.3s ease-in-out;
   outline: 1px solid rgba(160, 160, 160, 0.5);
+  // outline: 1px solid #825dff;
 }
 
 .expanded {
   // border-top-right-radius: 0;
   // border-bottom-right-radius: 0;
   width: 35vw;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .modal-content header{

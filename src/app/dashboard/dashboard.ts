@@ -75,12 +75,12 @@ export class Dashboard implements OnInit{
   loading = this.loanService.isLoading;
 
   modalUI: LoanUiService = inject(LoanUiService);//Modal UI signal
-  openModal = this.modalUI.modalOpen
-  modalMode = this.modalUI.modalMode
-  modalData = this.modalUI.targetLoan
+  openModal = this.modalUI.modalOpen;
+  modalMode = this.modalUI.modalMode;
+  modalData = this.modalUI.targetLoan;
 
-  filteredObjectList: LoanObject[]=[]
-  display = signal<'list'|'grid'>(localStorage.getItem('viewMode') as 'grid' | 'list' || 'list')
+  filteredObjectList: LoanObject[]=[];
+  display = signal<'list'|'grid'>(localStorage.getItem('viewMode') as 'grid' | 'list' || 'list');
 
   selectMode = signal(false);
   selectedIds = signal<Set<number>>(new Set());
