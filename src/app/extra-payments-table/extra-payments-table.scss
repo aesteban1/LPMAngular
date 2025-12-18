@@ -8,3 +8,28 @@
   gap: 2rem;
   justify-content: center;
 }
+
+.extra-payments {
+  border-collapse: separate;
+  border-spacing: 0 0.2rem;
+  width: 100%;
+
+  th, td{
+    padding:0.5rem 0.2rem;
+    margin: 0.2rem;
+    text-align: left;
+    background-color: rgba(160, 160, 160, 0.5);
+    user-select: none;
+    min-width: 6rem;
+  }
+
+  tr th:last-child,
+  tr td:last-child {
+    width: 10rem;
+  }
+}
+
+p {
+  text-align: center;
+  font-weight: bolder;
+}

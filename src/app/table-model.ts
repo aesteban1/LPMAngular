@@ -71,7 +71,7 @@ export class TableModel<T extends Record<string, any>> {
       ? col.value(row) 
       : (row as any)[key];
 
-    if(key === 'principal' || key === 'minimum' || key === 'interest' || key === 'balance') {
+    if(key === 'principal' || key === 'minimum' || key === 'interest' || key === 'balance' || key === 'amount') {
       if(raw == null || raw == '') return '$0.00';
       const num = typeof raw === 'number' ? raw : Number(raw);
       

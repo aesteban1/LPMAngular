@@ -18,13 +18,12 @@
   background-color: rgb(58, 58, 58);
   transition: all 0.3s ease-in-out;
   outline: 1px solid rgba(160, 160, 160, 0.5);
-  // outline: 1px solid #825dff;
 }
 
 .expanded {
   // border-top-right-radius: 0;
   // border-bottom-right-radius: 0;
-  width: 35vw;
+  width: 45vw;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
 }
@@ -192,5 +191,4 @@ label{
   grid-column: 2;
   grid-row: 1 / span 1;
   height: 100%;
-  background-color: rgba(160, 160, 160, 0.5);
 }

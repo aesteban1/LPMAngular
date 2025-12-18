@@ -93,6 +93,7 @@ import { ExtraPaymentsTable } from '../extra-payments-table/extra-payments-table
   `,
   styleUrl: './modal.scss'
 })
+
 export class Modal implements OnChanges{
   @Input() loanObject?: LoanObject;
   @Input() modalMode: 'add' | 'edit' = 'add';
@@ -115,7 +116,6 @@ export class Modal implements OnChanges{
     date: new FormControl(''),
   })
 
-
   //For editing existing loan, patch the form with incoming data
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['modalData'] && this.modalData) {
@@ -130,9 +130,9 @@ export class Modal implements OnChanges{
         date: this.modalData.date ?? ''
       })
     
-      this.extraPaymentsData = [...(this.modalData.extraPayments ?? [])];
-    } else {
-      this.extraPaymentsData = [];
+      this.extraPaymentsData = this.modalData?.extraPayments
+                              ? [...this.modalData.extraPayments]
+                              : [];
     }
   }
 
@@ -186,7 +186,7 @@ export class Modal implements OnChanges{
   }
 
   get extraPayments(): ExtraPayment[] {
-    return this.loanObject?.extraPayments ?? []
+    return this.extraPaymentsData;
   }
 
   closeModal() {

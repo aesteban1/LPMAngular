@@ -13,7 +13,7 @@ import { TableModel } from '../table-model';
     </div>
 
     @if(table.view().length > 0) {
-      <table>
+      <table class = "extra-payments">
         <thead>
           <tr>
             @for(col of table.columns(); track col.key) {
@@ -32,14 +32,14 @@ import { TableModel } from '../table-model';
             @for(payment of table.view(); track $index) {
               <tr>
                 <td>{{payment.date}}</td>
-                <td>{{payment.amount || 0}}</td> //?decimal pipe
-                <td>{{payment.note || '---'}}</td>
+                <td>{{"$" + payment.amount.toFixed(2) || (0).toFixed(2)}}</td>
+                <td>{{payment.note || 'Imagine getting your son whacked'}}</td>
               </tr>
             }
         </tbody>
       </table>
     } @else {
-      <p>No Extra payments defined.</p>
+      <p>No extra payments defined</p>
     }
   `,
   styleUrl: './extra-payments-table.scss'

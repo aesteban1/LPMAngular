@@ -65,6 +65,7 @@ import { Columnmenu } from '../columnmenu/columnmenu';
   `,
   styleUrl: './dashboard.scss'
 })
+
 export class Dashboard implements OnInit{
   @Output() addNewEntry = new EventEmitter<void>();
 
