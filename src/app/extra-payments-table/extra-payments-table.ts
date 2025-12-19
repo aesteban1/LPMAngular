@@ -26,6 +26,7 @@ import { TableModel } from '../table-model';
                 }
               </th>
             }
+            <th>D</th>
           </tr>
         </thead>
         <tbody>
@@ -34,6 +35,11 @@ import { TableModel } from '../table-model';
                 <td>{{payment.date}}</td>
                 <td>{{"$" + payment.amount.toFixed(2) || (0).toFixed(2)}}</td>
                 <td>{{payment.note || 'Imagine getting your son whacked'}}</td>
+                <td>
+                  <button class="primary" (click)="removePayement($index)">
+                    <img src="assets/trash.svg" alt="delete">
+                  </button>
+                </td>
               </tr>
             }
         </tbody>

@@ -23,9 +23,24 @@
     min-width: 6rem;
   }
 
+  tr th:nth-last-child(2),
+  tr td:nth-last-child(2) {
+    width: 10rem;
+  }
+
   tr th:last-child,
   tr td:last-child {
-    width: 10rem;
+    width: 2rem;
+    min-width:max-content
+  }
+}
+
+td button{
+  padding: 0;
+  img{
+    display: inline;
+    height: 1.1rem;
+    margin: 0 0.3rem 0 0.2rem;
   }
 }
 
