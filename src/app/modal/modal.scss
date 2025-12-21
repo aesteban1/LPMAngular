@@ -18,11 +18,10 @@
   background-color: rgb(58, 58, 58);
   transition: all 0.3s ease-in-out;
   outline: 1px solid rgba(160, 160, 160, 0.5);
+  overflow: hidden;
 }
 
 .expanded {
-  // border-top-right-radius: 0;
-  // border-bottom-right-radius: 0;
   width: 45vw;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
@@ -42,7 +41,7 @@
 
 .modal-content form{
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: auto, 1fr;
   grid-template-rows: repeat(1, 1fr);
   height: 90%;
   width: 100%;
@@ -183,8 +182,8 @@ label{
 
 .actions > *{
   height: fit-content;
-  width: fit-content;
-  min-width: 5rem;
+  width: max-content;
+  // min-width: 8rem;
 }
 
 .extra-payments-section {

@@ -141,17 +141,6 @@
       "rate": 2.5,
       "minimum": 34.12,
       "date": "2025-12-11"
-    },
-    {
-      "id": "4d2c",
-      "name": "",
-      "principal": 0,
-      "interest": 0,
-      "rate": 0,
-      "minimum": 0,
-      "date": "",
-      "extraPayments": [],
-      "order": "interest"
     }
   ]
 }

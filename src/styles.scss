@@ -30,5 +30,8 @@ main{
   width: fit-content;
   &:hover{
     outline: 2px solid #7052D4;
+    svg path{
+      stroke: #7052D4;
+    }
   }
 }
