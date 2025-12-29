@@ -22,9 +22,12 @@
 }
 
 .expanded {
-  width: 45vw;
+  width: 40vw;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
+  #form{
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .modal-content header{
@@ -41,7 +44,7 @@
 
 .modal-content form{
   display: grid;
-  grid-template-columns: auto, 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: repeat(1, 1fr);
   height: 90%;
   width: 100%;
@@ -190,4 +193,5 @@ label{
   grid-column: 2;
   grid-row: 1 / span 1;
   height: 100%;
+  // overflow-y: scroll;
 }

@@ -9,6 +9,11 @@
   justify-content: center;
 }
 
+.extra-payments-table-container{
+  max-height:26.5rem;
+  overflow-y: scroll;
+}
+
 .extra-payments {
   border-collapse: separate;
   border-spacing: 0 0.2rem;
@@ -18,7 +23,8 @@
     padding:0.5rem 0.2rem;
     margin: 0.2rem;
     text-align: left;
-    background-color: rgba(160, 160, 160, 0.5);
+    // background-color: rgba(160, 160, 160, 0.5);
+    background-color: #2a2a2a;
     user-select: none;
     min-width: 6rem;
   }
@@ -30,8 +36,8 @@
 
   tr th:last-child,
   tr td:last-child {
-    width: 2rem;
-    min-width:max-content;
+    width: max-content;
+    min-width:4.5rem;
   }
 }
 
@@ -41,12 +47,12 @@
 }
 
 .utility{
-  width: 1.5rem;
-  height: 1.5rem;
-  padding: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0.2rem;
+  box-sizing: content-box;
   margin: auto 0;
   background-color: transparent;
-  outline: 2px solid rgba(160, 160, 160, 0.5);
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -56,13 +62,7 @@
     display: block;
   }
   &:hover{
-    .delete path{
-      stroke: red;
-    }
-
-    .edit path{
-      stroke: green;
-    }
+    background-color: rgba($color: #a0a0a0, $alpha: 0.1);
   }
 }
 

@@ -141,6 +141,28 @@
       "rate": 2.5,
       "minimum": 34.12,
       "date": "2025-12-11"
+    },
+    {
+      "id": "2b15",
+      "name": "",
+      "principal": 0,
+      "interest": 0,
+      "rate": 0,
+      "minimum": 0,
+      "date": "",
+      "extraPayments": [
+        {
+          "date": "2025-12-29",
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "date": "2025-12-29",
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "order": "interest"
     }
   ]
 }
